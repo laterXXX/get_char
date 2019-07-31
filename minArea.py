@@ -67,7 +67,6 @@ for file_name in files:
 
     cv2.imshow("contours", img)
 
-    cv2.imshow("contours", img)
 
     while True:
         key = cv2.waitKey(1)
