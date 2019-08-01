@@ -2,18 +2,14 @@ import cv2
 import numpy as np
 import os
 
-# read and scale down image
-# wget https://bigsnarf.files.wordpress.com/2017/05/hammer.png #black and white
-# wget https://i1.wp.com/images.hgmsites.net/hug/2011-volvo-s60_100323431_h.jpg
-
 files = os.listdir('./rect_license/')
 for file_name in files:
 
     img = cv2.pyrDown(cv2.imread('./rect_license/'+file_name, cv2.IMREAD_UNCHANGED))
 
     cv2.imshow('src',img)
-    cv2.waitKey(0)
-    img= cv2.resize(img,(1200,400))
+    # cv2.waitKey(0)
+    img= cv2.resize(img,(1200,300))
     # threshold image
     ret, threshed_img = cv2.threshold(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
                     127, 255, cv2.THRESH_BINARY)
@@ -31,15 +27,27 @@ for file_name in files:
 
     cv2.drawContours(res,contours,-1,(0,255,15),2)
     cv2.imshow('drawContours',res)
+
+    # cv2.waitKey(0)
+
+
+    #<editor-fold desc=" remove some error data">
     cmin = 100
     cmax = 1500
-    # cv2.waitKey(0)
+    con = []
     for index,c in enumerate(contours):
         if c.shape[0] > cmax or c.shape[0] < cmin:
-            del contours[index]
+            pass
+        else:
+            con.append(c)
+    contours = con
     cv2.drawContours(res,contours,-1,(0,255,15),2)
-    cv2.imshow('remove',res)
+    cv2.imshow("remove_min_max",res)
     # cv2.waitKey(0)
+    #</editor-fold>
+
+
+
     for index,c in enumerate(contours):
         # get the bounding rect
         x, y, w, h = cv2.boundingRect(c)
@@ -55,10 +63,10 @@ for file_name in files:
         cv2.drawContours(img, [box], 0, (0, 0, 255))
 
         # finally, get the min enclosing circle
-        (x, y), radius = cv2.minEnclosingCircle(c)
+        # (x, y), radius = cv2.minEnclosingCircle(c)
         # convert all values to int
-        center = (int(x), int(y))
-        radius = int(radius)
+        # center = (int(x), int(y))
+        # radius = int(radius)
         # and draw the circle in blue
         # img = cv2.circle(img, center, radius, (255, 0, 0), 2)
 
